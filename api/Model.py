@@ -68,7 +68,7 @@ class User(db.Model) :
 
     def updateExamCountById(_id, _count) :
         user = User.query.filter_by(userid = _id).first()
-        user.examcount = _count
+        user.examcount = user.examcount + _count
 
     def updatePasswordId(_id, _password) :
         user = User.query.filter_by(userid = _id).first()
@@ -76,6 +76,115 @@ class User(db.Model) :
 
     def commitSession() :
         db.session.commit()        
+
+
+'''
+------------------------------------------------
+    Section: Query
+------------------------------------------------ 
+'''
+
+class QueryReport(db.Model) :
+    __tablename__ = 'queryreport'
+    queryid = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(60), nullable=False)
+    querytext = db.Column(db.String(100), nullable=False)
+
+    def json(self):
+        if self :
+            return {
+                'queryid': self.queryid,
+                'email': self.email,
+                'querytext': self.querytext       
+            }
+        else :
+            return None
+
+    def __repr__(self) :
+        return json.dumps(
+            {
+                'queryid': self.queryid,
+                'email': self.email,
+                'querytext': self.querytext
+            }
+        )
+
+    def addQuery( 
+                _email, 
+                _text) :
+        new_entry = QueryReport(email=_email, 
+                                querytext=_text)
+        db.session.add(new_entry)
+
+    def getQueryByEmail(_email) :
+        return QueryReport.json(QueryReport.query.filter_by(email = _email).first())
+
+    def deleteQuery(_id) :
+        return QueryReport.query.filter_by(queryid = _id).delete()
+
+    def getAllQuery() :
+        return [ QueryReport.json(q) for q in QueryReport.query.all() ]
+
+    def commitSession() :
+        db.session.commit()  
+
+
+'''
+------------------------------------------------
+    Section: EXAMCOUNTTRACKER
+------------------------------------------------ 
+'''
+
+class ExamCountTracker(db.Model) :
+    __tablename__ = 'examcounttracker'
+    examcounttrackerid = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.Integer, db.ForeignKey('user.userid'), nullable=False)
+    examcount = db.Column(db.Integer, nullable=False)
+    notification = db.Column(db.Integer, default=0)
+
+    def json(self):
+        if self :
+            return {
+                'examcounttrackerid': self.examcounttrackerid,
+                'userid': self.userid,
+                'examcount': self.examcount, 
+                'notification': self.notification         
+            }
+        else :
+            return None
+
+    def __repr__(self) :
+        return json.dumps(
+            {
+                'examcounttrackerid': self.examcounttrackerid,
+                'userid': self.userid,
+                'examcount': self.examcount,
+                'notification': self.notification
+            }
+        )
+
+    def addExamCountTracker( 
+                _userid, 
+                _examcount) :
+        new_entry = ExamCountTracker(userid=_userid, 
+                                    examcount=_examcount)
+        db.session.add(new_entry)
+
+    def deleteExamCountTracker(_id) :
+        return ExamCountTracker.query.filter_by(userid = _id).delete()
+
+    def getExamCountTrackerPerUser(_userid) :
+        return ExamCountTracker.json(ExamCountTracker.query.filter_by(userid = _userid).first())
+
+    def getExamCountTrackerNotNotified() :
+        return [ ExamCountTracker.json(t) for t in ExamCountTracker.query.filter_by(notification = 0)]
+
+    def updateExamCountTrackerAlreadyNotified(_id) :
+        tracker = ExamCountTracker.query.filter_by(userid = _id).first()
+        tracker.notification = 1        
+
+    def commitSession() :
+        db.session.commit()  
 
 '''
 ------------------------------------------------

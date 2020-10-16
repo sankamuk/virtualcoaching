@@ -35,13 +35,23 @@ export default class Report extends Component {
             axios.get('http://127.0.0.1:8080/getreport', header)
             .then(
                 res => {
-                    this.setState({
-                        exam_details : res.data.exam,
-                        question_details : res.data.question,
-                        latest_exam : res.data.latest,
-                        loggedin: "yes",
-                        error: "no"
-                    })
+                    if ( typeof res.data.exam !== "undefined" ) {
+                        this.setState({
+                            exam_details : res.data.exam,
+                            question_details : res.data.question,
+                            latest_exam : res.data.latest,
+                            loggedin: "yes",
+                            error: "no"
+                        })
+                    } else {
+                        this.setState({
+                            exam_details : null,
+                            question_details : null,
+                            latest_exam : null,
+                            loggedin: "yes",
+                            error: "no"
+                        })
+                    }                  
                 }
             ).catch(
                 err => {

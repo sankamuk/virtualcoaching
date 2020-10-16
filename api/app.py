@@ -39,6 +39,7 @@ def login():
         app.logger.error('Cannot find email '+str(email)+'.')
         return Response('', 401)
 
+
 def validate(f):
     @wraps(f)
     def wrappers(*args, **kwargs) :
@@ -67,7 +68,19 @@ def get_user():
                                 algorithm = 'HS256')
     userid = token_decoded['id']
     app.logger.info('Fetching user details for userid '+str(userid)+'.')
-    return User.getUserById(userid)
+    user = User.getUserById(userid)
+    isExamCountUpdate = 0
+    if ExamCountTracker.getExamCountTrackerPerUser(user['userid']) :
+        isExamCountUpdate = 1
+    return {
+        'name': user['name'],
+        'email': user['email'],
+        'password': user['password'],
+        'examcount': user['examcount'],
+        'userid': user['userid'],
+        'isexamcountupdate': isExamCountUpdate
+    }
+
 
 @app.route('/updatepassword', methods = ['POST'])
 @validate
@@ -93,7 +106,7 @@ def update_user_password():
 
 @app.route('/updateexamcount', methods = ['POST'])
 @validate
-def update_user_examcount():
+def request_user_examcount():
     token = request.headers.get('token')
     token_decoded = jwt.decode(
                                 token, 
@@ -102,15 +115,67 @@ def update_user_examcount():
     userid = token_decoded['id']
     data = request.get_json()
     examcount = data['examcount']
+    app.logger.info('Checking if examcount update request already resepresent for user '+ str(userid) +'.')
+    userrecord = ExamCountTracker.getExamCountTrackerPerUser(userid)
+    if userrecord :
+        app.logger.error('ExamCount update already present for user.')
+        return Response('', 400)
+    else :
+        app.logger.info('Creating request for user.')
+        ExamCountTracker.addExamCountTracker(userid, examcount)
+        ExamCountTracker.commitSession()
+        return Response('', 200)
+
+
+@app.route('/applyexamcount/<int:userid>/<int:examcount>', methods = ['GET'])
+@validate
+def update_user_examcount(userid, examcount):
+    token = request.headers.get('token')
+    token_decoded = jwt.decode(
+                                token, 
+                                app.config['SECRET_KEY'], 
+                                algorithm = 'HS256')
+    myuserid = token_decoded['id']
+    if myuserid != 0 :
+        app.logger.error('Only an admin can update.')
+        return Response('', 500)
     app.logger.info('Updating examcount for userid '+str(userid)+' with value '+str(examcount)+'.')
-    User.updateExamCountById(userid, examcount)
-    User.commitSession()    
     user = User.getUserById(userid)
     app.logger.info(user)
-    if user['examcount'] == examcount :
+    User.updateExamCountById(userid, examcount)
+    User.commitSession()
+    updateduser = User.getUserById(userid)
+    app.logger.info(updateduser)
+    if updateduser['examcount'] == (user['examcount'] + examcount) :
+        ExamCountTracker.deleteExamCountTracker(userid)
+        ExamCountTracker.commitSession()
         return Response('', 200)
     else :
         return Response('', 500)
+
+
+@app.route('/createuser', methods = ['POST'])
+def create_user():
+    data = request.get_json()
+    name = data['name']
+    email = data['email']
+    password = data['password']
+    app.logger.info('Creating user with '+ str(name) +', email '+ str(email) +'.')
+    doexist = User.getUserByEmail(email)
+    if doexist :
+        app.logger.error('User already exist, email should be unique.')
+        return Response('', 500)
+    else :
+        app.logger.info('No existing user has same email thus proceeding to create.')
+        User.addUser(name, email, password)
+        User.commitSession()
+        doexist = User.getUserByEmail(email)
+        if doexist :
+            app.logger.info('User created successfully.')
+            return Response('', 200)
+        else :
+            app.logger.error('Unkown error occured while creating user.')
+            return Response('', 500)
 
 
 '''
@@ -165,6 +230,7 @@ def create_exam():
     else :
         app.logger.error('Already active Exam '+ str(current_exam) +' ongoing for  User '+ str(userid) +'.')
         return Response('', 400)
+
 
 @app.route('/userexam', methods = ['GET'])
 @validate
@@ -249,6 +315,7 @@ def user_exam():
             app.logger.info('No Exam ongoing for User '+str(userid)+' also no history of Exam.')
             result = {}
     return result
+
 
 @app.route('/submitanswer', methods = ['POST'])
 @validate
@@ -380,6 +447,24 @@ def create_report():
     app.logger.debug(result)
     return result
 
+
+'''
+------------------------------------------------
+    Section: Query
+------------------------------------------------ 
+'''
+
+@app.route('/query', methods = ['POST'])
+def add_query():
+    data = request.get_json()
+    email = data['email']
+    query = data['query']
+    if QueryReport.getQueryByEmail(email) :
+        return Response('', 500)
+    else :        
+        QueryReport.addQuery(email, query)
+        QueryReport.commitSession()
+        return Response('', 200)
 
 if __name__ == '__main__':
     app.run(port=8080, debug=True)

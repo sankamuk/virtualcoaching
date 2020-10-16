@@ -45,9 +45,11 @@ class Profile extends React.Component {
             .then(
                 res => {
                     this.setState({
+                        userid: res.data.userid,
                         user: res.data.name,
                         email: res.data.email,
                         examcount: res.data.examcount,
+                        hasRequest: res.data.isexamcountupdate,
                         loggedin: "yes",
                         error: "no" 
                     })
@@ -129,6 +131,27 @@ class Profile extends React.Component {
                         </ToastHeader>
         }
 
+        let addExamButton = <Button outline color="success" >Request</Button>
+        if ( this.state.hasRequest == 1 ){
+            addExamButton = <Button disabled="true" >Request</Button>
+        }
+
+        let adminComponent = null ;
+        if ( this.state.userid === 0 ) {
+            adminComponent = <Row>
+                                <Col sm='12' md={{ size: 6, offset: 3 }}>
+                                    <Toast>
+                                        <ToastHeader>
+                                            Approve ExamCount Request:
+                                        </ToastHeader>
+                                        <ToastBody>
+                                            <Button href="/approvepage" outline color="danger">Approval Page</Button>
+                                        </ToastBody>
+                                    </Toast>
+                                </Col>
+                            </Row>
+        } 
+
         if ( this.state.loggedin === "no" ) {
             return <Unauthorized />
         } else if ( this.state.error === "yes" ) {
@@ -198,9 +221,7 @@ class Profile extends React.Component {
                                             </FormGroup>
                                         </Col>
                                         </Row>
-                                        <Button outline color="success" >
-                                            Request
-                                        </Button>
+                                        {addExamButton}
                                     </Form>                                    
                                 </ToastBody>
                             </Toast>
@@ -221,6 +242,10 @@ class Profile extends React.Component {
                             </Toast>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col><br></br></Col>
+                    </Row>
+                    {adminComponent}
                 </Container>
             )
         }

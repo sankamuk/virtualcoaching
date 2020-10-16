@@ -117,7 +117,7 @@ export default class Exam extends Component {
             axios.get('http://127.0.0.1:8080/userexam', header)
             .then(
                 res => {
-                    if ( typeof res.data.result === "undefined" ) {
+                    if ( typeof res.data.question !== "undefined" ) {
                         this.setState({
                             question : res.data.question,
                             option1 : res.data.option1,
@@ -127,9 +127,14 @@ export default class Exam extends Component {
                             loggedin: "yes",
                             error: "no"
                         })
-                    } else {
+                    } else if ( typeof res.data.result !== "undefined" ) {
                         this.setState({                        
                             result : res.data.result,
+                            loggedin: "yes",
+                            error: "no"
+                        })
+                    } else {
+                        this.setState({                        
                             loggedin: "yes",
                             error: "no"
                         })
@@ -155,7 +160,7 @@ export default class Exam extends Component {
             return <Unauthorized />
         } else if ( this.state.error === "yes" ) {
             return <InternalError/>
-        } else if ( this.state.result === null ) {
+        } else if ( this.state.question !== null ) {
             return (
                 <Jumbotron>
                 <h1 className="display-3">Question</h1>
@@ -205,7 +210,7 @@ export default class Exam extends Component {
                         </Form>
                 </Jumbotron>
             )
-        } else {
+        } else if ( this.state.result !== null ) {
 
             let exam_status =   <Alert color="success"> PASSES !!!
                                 </Alert>
@@ -247,6 +252,18 @@ export default class Exam extends Component {
                     <Button onClick = { this.handleCreateExam } color="primary">Start New Exam</Button>
                     </p>
                 </Jumbotron>
+            )
+        } else {
+            return (
+            <Jumbotron>
+               <h1 className="display-3">Sorry. Nothing for you!</h1>
+               <p className="lead">You have no examination ongoing neither you have any examination history.</p>
+               <hr className="my-2" />
+               <p>Action: Schedule a new examination or go to profile page and request for examination if you have no examination quota.</p>
+               <p className="lead">
+                    <Button onClick = { this.handleCreateExam } color="primary">Start New Exam</Button>
+               </p>
+            </Jumbotron>
             )
         }
         
