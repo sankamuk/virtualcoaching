@@ -1,10 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from settings import app
 import json
 import datetime
-
-db = SQLAlchemy(app)
+from app import db
 
 '''
 ------------------------------------------------
