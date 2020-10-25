@@ -1,0 +1,20 @@
+- name: Initiate Virtualenv
+  become: true
+  pip: virtualenv="{{ app_dir }}/{{ app_name }}/api/venv" virtualenv_command="/usr/bin/python3 -m venv" requirements={{ app_dir }}/{{ app_name }}/api/requirements.txt
+
+- name: Replace Application Host
+  become: true
+  replace: path={{ app_dir }}/{{ app_name }}/api/config/development.py regexp=__HOST__ replace={{ app_crt_cn_name }}
+
+- name: Replace Application Port
+  become: true
+  replace: path={{ app_dir }}/{{ app_name }}/api/config/development.py regexp=__PORT__ replace={{ app_api_port }}
+
+- name: Replace Application Secret
+  become: true
+  replace: path={{ app_dir }}/{{ app_name }}/api/config/development.py regexp=__PASSWORD__ replace={{ app_secret }}
+
+- name: Chown Application Directory
+  become: true
+  file: dest={{ app_dir }} owner={{ app_user }} group={{ app_group }} recurse=yes
+

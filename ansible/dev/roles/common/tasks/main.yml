@@ -1,0 +1,5 @@
+---
+- include: rhel.yml
+- include: nginx.yml
+- include: git.yml
+- include: api.yml

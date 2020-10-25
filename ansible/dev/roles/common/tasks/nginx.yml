@@ -1,0 +1,40 @@
+- name: Install Nginx
+  yum: name=nginx state=present
+  become: true
+
+- name: Nginx App Directory
+  file: path=/etc/nginx/{{ app_name }} state=directory
+  become: true
+
+- name: Generate Private Key
+  become: true
+  command: openssl genrsa -out "/etc/nginx/{{ app_name }}/key.pem" 2048
+  args: 
+    creates: "/etc/nginx/{{ app_name }}/key.pem"
+
+- name: Generate CSR
+  become: true
+  command: openssl req \
+        -new \
+        -subj '/C=IN/ST=WB/L=Kolkata/O=Education/CN={{ app_crt_cn_name }}'
+        -key "/etc/nginx/{{ app_name }}/key.pem" \
+        -out "/etc/nginx/{{ app_name }}/csr.pem"
+  args: 
+    creates: "/etc/nginx/{{ app_name }}/csr.pem"
+
+- name: Generate Certificate
+  become: true
+  command: openssl req \
+        -x509 \
+        -days 1825 \
+        -key "/etc/nginx/{{ app_name }}/key.pem" \
+        -in "/etc/nginx/{{ app_name }}/csr.pem" \
+        -out "/etc/nginx/{{ app_name }}/cert.pem"
+  args: 
+    creates: "/etc/nginx/{{ app_name }}/cert.pem"
+
+- name: SSL Nginx Configuration 
+  become: true
+  template: src=nginx_ssl.conf.j2 dest=/etc/nginx/conf.d/{{ app_name }}.conf
+  notify:
+    - restart nginx

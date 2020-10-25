@@ -1,0 +1,7 @@
+- name: Install Git
+  yum: name=git state=present
+  become: true
+
+- name: Clone Repository
+  become: true
+  git: repo={{ code_repository }} dest={{ app_dir }}/{{ app_name }}

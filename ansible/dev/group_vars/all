@@ -1,0 +1,11 @@
+app_name: examnow
+app_user: dev
+app_group: dev
+app_api_port: 8081
+app_port: 8080
+app_dir: /home/dev/examnow
+app_ssl_dir: /etc/security/ssl/examnow
+app_crt_cn_name: client.sanmuk
+app_crt_mail_id: admin@client.sanmuk
+code_repository: https://github.com/sankamuk/virtualcoaching.git
+app_secret: "{{ lookup('password', '/tmp/passwordfile chars=ascii_letters,digits,hexdigits,punctuation') }}"

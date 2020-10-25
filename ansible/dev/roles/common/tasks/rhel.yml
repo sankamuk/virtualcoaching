@@ -1,0 +1,25 @@
+- name: Python Setup
+  become: true
+  yum: name={{ item }} state=present
+  with_items :
+    - python3
+    - python3-devel
+    - firewalld
+    - epel-release
+    - openssl
+
+- name: Add Group 
+  become: true
+  group: name={{ app_group }} state=present
+
+- name: Add User 
+  become: true
+  user: name={{ app_user }} shell=/bin/bash group={{ app_group }} append=yes
+
+- name: Open API Server Port
+  become: true
+  firewalld: port=8081/tcp state=enabled
+
+- name: Open Examnow Application Port
+  become: true
+  firewalld: port=8080/tcp state=enabled
