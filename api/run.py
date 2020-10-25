@@ -7,3 +7,8 @@ if __name__ == "__main__" :
   with app.app_context():
   	db.create_all()
   app.run()
+else :
+  config_name = os.getenv("FLASK_CONFIG")
+  gapp = application(config_name)
+  with gapp.app_context():
+        db.create_all()
