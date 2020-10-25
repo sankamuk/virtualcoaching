@@ -1,8 +1,9 @@
 import os
 
+SERVER_NAME="__HOST__:__PORT__"
 DEBUG = True
 SQLALCHEMY_ECHO = True
-SECRET_KEY = 'sankar'
+SECRET_KEY = '__PASSWORD__'
 basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir, '../app_dev.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False

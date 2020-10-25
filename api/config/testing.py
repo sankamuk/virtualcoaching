@@ -3,7 +3,7 @@ import os
 TESTING = True
 DEBUG = False
 SQLALCHEMY_ECHO = False
-SECRET_KEY = 'sankar'
+SECRET_KEY = '__PASSWORD__'
 basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir, '../app_test.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False

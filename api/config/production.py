@@ -1,9 +1,9 @@
 import os
 
-SERVER_NAME="127.0.0.1:8080"
+SERVER_NAME="__HOST__:__PORT__"
 DEBUG = False
 SQLALCHEMY_ECHO = False
-SECRET_KEY = 'secret'
+SECRET_KEY = '__PASSWORD__'
 basedir = os.path.abspath(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir, '../app_prd.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
