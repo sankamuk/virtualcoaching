@@ -3,8 +3,7 @@ import os
 DEBUG = True
 SQLALCHEMY_ECHO = True
 SECRET_KEY = '__PASSWORD__'
-basedir = os.path.abspath(os.path.dirname(__file__))
-SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join(basedir, '../app_dev.db')
+SQLALCHEMY_DATABASE_URI = 'sqlite:///'+ os.path.join('__APP-HOME__', 'data/app_dev.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 CORS_HEADERS = 'Content-Type'
 EXAM_SUBJECT_LIST = ['history','geography','mathemetics','science','gk','aptitude']
