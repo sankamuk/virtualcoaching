@@ -30,6 +30,10 @@
   become: true
   template: src=examnow.conf.j2 dest=/etc/supervisord.d/{{ app_name }}.ini
 
+- name: Set Selinux Permission 
+  become: true
+  command: setsebool -P httpd_can_network_connect 1
+
 - name: Restart Supervisord
   become: true
   service: name=supervisord state=restarted
