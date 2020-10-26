@@ -1,4 +1,4 @@
-- name: Python Setup
+- name: System Software Install
   become: true
   yum: name={{ item }} state=present
   with_items :
