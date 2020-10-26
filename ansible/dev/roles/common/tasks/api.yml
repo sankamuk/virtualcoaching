@@ -26,3 +26,13 @@
   become: true
   file: dest={{ app_dir }} owner={{ app_user }} group={{ app_group }} recurse=yes
 
+- name: Gunicorn Supervisord Configuration 
+  become: true
+  template: src=examnow.conf.j2 dest=/etc/supervisord.d/{{ app_name }}.ini
+
+- name: Restart Supervisord
+  become: true
+  service: name=supervisord state=restarted
+  notify:
+    - restart nginx
+

@@ -2,6 +2,10 @@
   yum: name=git state=present
   become: true
 
+- name: Cleanup Application
+  become: true
+  file: path={{ app_dir }}/{{ app_name }} state=absent
+
 - name: Clone Repository
   become: true
   git: repo={{ code_repository }} dest={{ app_dir }}/{{ app_name }}
