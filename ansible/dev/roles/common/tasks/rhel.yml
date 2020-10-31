@@ -17,6 +17,10 @@
   become: true
   user: name={{ app_user }} shell=/bin/bash group={{ app_group }} append=yes
 
+- name: Enable firewall
+  become: true
+  service: name=firewalld state=started
+
 - name: Open API Server Port
   become: true
   firewalld: port={{ app_api_port }}/tcp state=enabled

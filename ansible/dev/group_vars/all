@@ -3,7 +3,7 @@ app_user: dev
 app_group: dev
 app_api_port: 8080
 app_port: 80
-app_backend: client.sanmuk
+app_backend: client.sanmuk:8080
 app_dir: /home/dev/examnow
 app_ssl_dir: /etc/security/ssl/examnow
 app_crt_cn_name: client.sanmuk
