@@ -26,7 +26,7 @@ export default class UpdatePassword extends React.Component {
                 token : localStorage.getItem('token')
             }   
 
-            axios.post('http://127.0.0.1:8080/updatepassword', data, { headers: headers })
+            axios.post('updatepassword', data, { headers: headers })
             .then(
                 res => {
                     localStorage.setItem('token', res.data.token);

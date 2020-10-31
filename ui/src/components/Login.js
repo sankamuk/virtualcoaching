@@ -25,7 +25,7 @@ export default class Login extends React.Component {
             'Content-Type': 'application/json'
         }
 
-        axios.post('http://127.0.0.1:8080/login', data, { headers: headers })
+        axios.post('login', data, { headers: headers })
         .then(
             res => {
                 localStorage.setItem('token', res.data.token);

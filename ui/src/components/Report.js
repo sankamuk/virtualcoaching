@@ -32,7 +32,7 @@ export default class Report extends Component {
                 }
             }
 
-            axios.get('http://127.0.0.1:8080/getreport', header)
+            axios.get('getreport', header)
             .then(
                 res => {
                     if ( typeof res.data.exam !== "undefined" ) {

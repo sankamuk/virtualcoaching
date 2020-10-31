@@ -33,7 +33,7 @@ export default class Exam extends Component {
                 }            
             }   
 
-            axios.get('http://127.0.0.1:8080/createexam', header)
+            axios.get('createexam', header)
             .then(
                 res => {
                     console.log(res);
@@ -77,7 +77,7 @@ export default class Exam extends Component {
                 "choice": parseInt(e.target.option_selected.value)
             }
 
-            axios.post('http://127.0.0.1:8080/submitanswer', data, header)
+            axios.post('submitanswer', data, header)
             .then(
                 res => {
                     console.log(res);
@@ -114,7 +114,7 @@ export default class Exam extends Component {
                 }
             }
 
-            axios.get('http://127.0.0.1:8080/userexam', header)
+            axios.get('userexam', header)
             .then(
                 res => {
                     if ( typeof res.data.question !== "undefined" ) {

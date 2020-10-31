@@ -1,0 +1,15 @@
+- name: Replace Backend URL
+  become: true
+  replace: path={{ app_dir }}/{{ app_name }}/ui/src/index.js regexp=__APP-BACKEND__ replace={{ app_backend }}
+
+- name: Build Application
+  become: true
+  shell: "{{ app_dir }}/{{ app_name }}/ui/build.sh >> build.sh.log"
+  args:
+    chdir: "{{ app_dir }}/{{ app_name }}/ui/"
+
+- name: Chown Application Directory
+  become: true
+  file: dest={{ app_dir }} owner={{ app_user }} group={{ app_group }} recurse=yes
+  notify:
+    - restart nginx

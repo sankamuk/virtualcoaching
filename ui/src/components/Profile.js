@@ -41,7 +41,7 @@ class Profile extends React.Component {
                 }
             }
 
-            axios.get('http://127.0.0.1:8080/user', header)
+            axios.get('user', header)
             .then(
                 res => {
                     this.setState({
@@ -93,7 +93,7 @@ class Profile extends React.Component {
                 "examcount": parseInt(e.target.examcount.value)
             }   
 
-            axios.post('http://127.0.0.1:8080/updateexamcount', data, header)
+            axios.post('updateexamcount', data, header)
             .then(
                 res => {
                     console.log(res);

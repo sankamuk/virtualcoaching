@@ -30,7 +30,7 @@ export default class Approval extends React.Component {
                 token : localStorage.getItem('token')
             }   
 
-            let urlString = 'http://127.0.0.1:8080/applyexamcount/'+
+            let urlString = 'applyexamcount/'+
             e.target.userid.value + '/' +
             e.target.examcount.value
 

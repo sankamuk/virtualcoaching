@@ -1,0 +1,11 @@
+server {
+  listen                {{ app_port }};
+  access_log            /var/log/nginx/{{ app_crt_cn_name }}.ui.access.log;
+  error_log             /var/log/nginx/{{ app_crt_cn_name }}.ui.error.log info;
+  keepalive_timeout     5;
+
+  location / {
+    root {{ app_dir }}/{{ app_name }}/ui/build;
+    try_files $uri /index.html =404;
+  }
+}

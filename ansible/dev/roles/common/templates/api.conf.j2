@@ -1,0 +1,25 @@
+upstream app_server_wsgiapp {
+     server 127.0.0.1:5000 fail_timeout=0;
+}
+
+server {
+  listen                {{ app_api_port }};
+  access_log            /var/log/nginx/{{ app_crt_cn_name }}.api.access.log;
+  error_log             /var/log/nginx/{{ app_crt_cn_name }}.api.error.log info;
+  keepalive_timeout     5;
+
+  location /static {
+    autoindex on;
+    alias {{ app_dir }}/static;
+  }
+
+  location / {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header Host $http_host;
+           proxy_redirect off;
+           if (!-f $request_filename) {
+             proxy_pass http://app_server_wsgiapp;
+             break;
+    } 
+  }
+}

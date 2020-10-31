@@ -28,7 +28,7 @@ export default class Register extends React.Component {
             'Content-Type': 'application/json'
         }
 
-        axios.post('http://127.0.0.1:8080/createuser', data, { headers: headers })
+        axios.post('createuser', data, { headers: headers })
         .then(
             res => {
                 console.log('Successfully created user.')

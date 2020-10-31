@@ -23,7 +23,7 @@ export default class Query extends React.Component {
             'Content-Type': 'application/json'
         }
 
-        axios.post('http://127.0.0.1:8080/query', data, { headers: headers })
+        axios.post('query', data, { headers: headers })
         .then(
             res => {
                 this.setState({

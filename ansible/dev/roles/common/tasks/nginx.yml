@@ -33,8 +33,16 @@
   args: 
     creates: "/etc/nginx/{{ app_name }}/cert.pem"
 
+- name: Nginx API Configuration 
+  become: true
+  template: src=api.conf.j2 dest=/etc/nginx/conf.d/api.conf
+
+- name: Nginx UI Configuration 
+  become: true
+  template: src=ui.conf.j2 dest=/etc/nginx/conf.d/ui.conf
+
 - name: SSL Nginx Configuration 
   become: true
-  template: src=nginx_ssl.conf.j2 dest=/etc/nginx/conf.d/{{ app_name }}.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
   notify:
     - restart nginx

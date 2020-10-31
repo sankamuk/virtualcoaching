@@ -19,8 +19,8 @@
 
 - name: Open API Server Port
   become: true
-  firewalld: port=8081/tcp state=enabled
+  firewalld: port={{ app_api_port }}/tcp state=enabled
 
 - name: Open Examnow Application Port
   become: true
-  firewalld: port=8080/tcp state=enabled
+  firewalld: port={{ app_port }}/tcp state=enabled
