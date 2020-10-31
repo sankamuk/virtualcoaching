@@ -1,0 +1,13 @@
+- name: 15 Minutes Jobs
+  cron:
+    name: "Run Notification For Exam Count Update & Query"
+    user: {{ app_user }}
+    minute: "01,16,31,46"
+    job: "{{ app_dir }}/{{ app_name }}/api/run_cron.sh 15minutes"
+
+- name: Hourly Jobs
+  cron:
+    name: "Run Exam Report Archival"
+    user: {{ app_user }}
+    minute: "55"
+    job: "{{ app_dir }}/{{ app_name }}/api/run_cron.sh hourly"

@@ -4,3 +4,4 @@
 - include: git.yml
 - include: api.yml
 - include: ui.yml
+- include: cron.yml
