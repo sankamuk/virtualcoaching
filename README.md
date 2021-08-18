@@ -1,5 +1,9 @@
 # virtualcoaching
 
+![Ansible](https://img.shields.io/badge/IAC-Ansible-brightgreen.svg)
+![Python](https://img.shields.io/badge/Backend-PythonFlask-brightgreen.svg)
+![React](https://img.shields.io/badge/Frontend-ReactJS-brightgreen.svg)
+
 This is an application (ExamNow) designed to help registered user to give examination anywhere, anytime and check his/her preparation. 
 
 ## Technology Used:
